@@ -1,0 +1,19 @@
+: Insert user
+* Welcome. What kind of user are you?
+  * A: Admin
+  * E: Entrepeneur
+  * C: Company
+> A
+* Insert name: > Santiago De Olivera
+* Insert password: > afihwpgb
+
+: Initial menu (administrator)
+* Welcome, Santiago De Olivera. What do you want to do?
+  * 1. Invite a company to make an offer
+> 1
+
+# Insert input for making an invitation
+* Very well. Please insert the necessary data.
+* Insert corporation name: > A&C # I don't know any companies which collaborate with circular economy
+# Insert more data... (it's necessary to determine the data an invitation needs)
+Go to "Initial menu"
