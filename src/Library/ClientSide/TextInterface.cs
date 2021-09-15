@@ -1,21 +1,46 @@
-using System;
 using Library.ServerSide;
+using Library.ClientSide.ConsoleIO;
+using System;
+using System.IO;
 
 namespace Library.ClientSide
 {
     /// <summary>
-    /// This class represents a client interface which works through the console.
+    /// This class represents a client interface which works through text flows.
     /// </summary>
-    public class ConsoleInterface : IClientInterface
+    public class TextInterface : IClientInterface
     {
+        /// <summary>
+        /// The reader through which the interface reads text
+        /// </summary>
+        private TextReader reader { get; }
+
+        /// <summary>
+        /// The writer through which the interface writes text
+        /// </summary>
+        private TextWriter writer { get; }
+
+        public TextInterface(TextReader reader, TextWriter writer)
+        {
+            this.reader = reader;
+            this.writer = writer;
+        }
+
+        /// <summary>
+        /// Creates a text interface which communicates through the console.
+        /// </summary>
+        /// <returns>A text interface which communicates through the console.</returns>
+        public static TextInterface FromConsole() =>
+            new TextInterface(new ConsoleReader(), new ConsoleWriter());
+
         /// <summary>
         /// Retrieves data from the console after printing a prompt to it.
         /// </summary>
         /// <returns>The user input</returns>
-        private static string getInput()
+        private string getInput()
         {
-            Console.Write($"> ");
-            return Console.ReadLine();
+            writer.Write($"> ");
+            return reader.ReadLine();
         }
 
         /// <summary>
@@ -23,10 +48,10 @@ namespace Library.ClientSide
         /// </summary>
         /// <param name="name">The placeholder to print</param>
         /// <returns>The user input</returns>
-        private static string getPlaceheldInput(string name)
+        private string getPlaceheldInput(string name)
         {
-            Console.Write($"{name}: ");
-            return Console.ReadLine();
+            writer.Write($"{name}: ");
+            return reader.ReadLine();
         }
 
         /// <summary>
@@ -49,12 +74,12 @@ namespace Library.ClientSide
         /// Asks the user if they want to retry an operation after failing before.
         /// </summary>
         /// <returns>Whether the user wants to retry</returns>
-        private static bool TryAgain()
+        private bool TryAgain()
         {
-            Console.WriteLine("Press \"q\" to quit...");
-            Console.WriteLine("Press any other key to try again...");
-            ConsoleKeyInfo r = Console.ReadKey(true);
-            return !("Qq".Contains(r.KeyChar));
+            writer.WriteLine("Press \"q\" to quit...");
+            writer.WriteLine("Press any other key to try again...");
+            char r = (char)reader.Read();
+            return !("qQ\uffff".Contains(r));
         }
 
         /// <summary>
@@ -64,13 +89,13 @@ namespace Library.ClientSide
         /// <param name="msg">An error message to print before asking to try again.</param>
         /// <typeparam name="T">The type of the data to retrieve.</typeparam>
         /// <returns>The data retrieved by func, if it did.</returns>
-        private static T TryUntilValid<T>(Func<T> func, string msg = null)
+        private T TryUntilValid<T>(Func<T> func, string msg)
         {
             while(true)
             {
                 T r = func();
                 if(r is T result) return result;
-                if(msg != null) Console.WriteLine(msg);
+                if(msg != null) writer.WriteLine(msg);
                 if(!TryAgain()) return default(T);
             }
         }
@@ -81,50 +106,45 @@ namespace Library.ClientSide
         /// <param name="func">The function to execute to retrieve the data, or the error to print before asking to try again.</param>
         /// <typeparam name="T">The type of the data to retrieve.</typeparam>
         /// <returns>The data retrieved by func, if it did.</returns>
-        private static T TryUntilValid<T>(Func<(T, string)> func)
+        private T TryUntilValid<T>(Func<(T, string)> func)
         {
             while(true)
             {
                 var (r, msg) = func();
                 if(r is T result) return result;
-                if(msg != null) Console.WriteLine(msg);
+                if(msg != null) writer.WriteLine(msg);
                 if(!TryAgain()) return default(T);
             }
         }
 
-        private static UserType? GetUserType()
-        {
-            Console.Clear();
-            Console.WriteLine("Welcome. What kind of user are you?");
-            Console.WriteLine("\tA: Admin");
-            Console.WriteLine("\tE: Entrepeneur");
-            Console.WriteLine("\tC: Company");
-            return stringToUserType( getInput() );
-        }
-
+        /// <summary>
+        /// Realizes the operation to sign in to the program.
+        /// </summary>
+        /// <param name="conn">The connection with which the interface accesses the database.</param>
+        /// <returns>The user, if the operation succeeded.</returns>
         private (User, string) signIn(IDatabaseConnection conn)
         {
             if(
-                   TryUntilValid(GetUserType, "Invalid answer.")                           is UserType type
-                && TryUntilValid(() => getPlaceheldInput("Name"), "Invalid answer.")       is string   name
+                   TryUntilValid(() => getPlaceheldInput("Name"), "Invalid answer.")       is string   name
                 && TryUntilValid(() => getPlaceheldInput("Password"), "Invalid password.") is string   password
             )
             {
-                User user = new User(type, name);
-                SignInResult response = conn.SignIn(user, password);
+                SignInResult response = conn.SignIn(name, password);
                 switch(response)
                 {
-                    case SignInResult.Ok: return (user, null);
-                    case SignInResult.NotFound: return (null, "There isn't a user with the specified data.");
-                    case SignInResult.InvalidPassword: return (null, "The type, name, or password are invalid.")
-                        
+                    case SignInResult.OkAdmin:         return (new User(UserType.Admin,       name), null);
+                    case SignInResult.OkEntrepeneur:   return (new User(UserType.Entrepeneur, name), null);
+                    case SignInResult.OkCompany:       return (new User(UserType.Company,     name), null);
+
+                    case SignInResult.NotFound:        return (null, "There isn't a user with the specified data.");
+                    case SignInResult.InvalidPassword: return (null, "The type, name, or password are invalid.");
+
+                    default: throw new Exception();
                 }
-            } else return (null, "");
+            } else return (null, null);
         }
 
-        User IClientInterface.SignIn(IDatabaseConnection conn)
-        {
-            return TryUntilValid<User>(() => signIn(conn));
-        }
+        User IClientInterface.SignIn(IDatabaseConnection conn) =>
+            TryUntilValid<User>(() => signIn(conn));
     }
 }

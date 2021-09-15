@@ -1,5 +1,8 @@
 ﻿using System;
-using Library;
+using Library.ClientSide;
+using Library.ServerSide;
+using Library.ClientSide.ConsoleIO;
+using Library.ServerSide.FileIO;
 
 namespace Program
 {
@@ -7,7 +10,12 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            IClientInterface interface = new ConsoleInterface();
+            Library.StringReader reader = new Library.StringReader(
+                "Santiago De Olivera\n123\nnBruno\nABC\n"
+            );
+            IClientInterface clientInterface = new TextInterface(reader, new ConsoleWriter());
+            IDatabaseConnection connection = new FileDatabaseConnection(@"../../Assets/Data.json");
+            Console.WriteLine(clientInterface.SignIn(connection));
         }
     }
 }

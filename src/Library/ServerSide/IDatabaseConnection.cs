@@ -14,9 +14,9 @@ namespace Library.ServerSide
         /// <summary>
         /// Confirms whether a user can sign in with the given type, name, and password.
         /// </summary>
-        /// <param name="userData">The user to attempt to sign in.</param>
+        /// <param name="name">The user's name.</param>
         /// <param name="password">The user's password.</param>
         /// <returns>Whether the data belongs to a valid user</returns>
-        SignInResult SignIn(User userData, string password);
+        SignInResult SignIn(string name, string password);
     }
 }

@@ -7,6 +7,10 @@ namespace Library.ServerSide
     /// </summary>
     public enum SignInResult
     {
-        Ok, NotFound, InvalidPassword
+        OkAdmin,
+        OkEntrepeneur,
+        OkCompany,
+        NotFound,
+        InvalidPassword
     }
 }
