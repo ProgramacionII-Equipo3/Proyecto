@@ -1,0 +1,154 @@
+//  // Information holder
+//  // Structurer
+//  // Controller
+//  ProgramData
+//  	User[]
+//  	Invitation[]
+//  	Material[]
+//  	Offer[]
+//  	Enterprise[]
+//  	Entrepeneur[]
+
+
+
+// Information holder
+// Service provider
+User
+	Type   // Either administer, enterprise, or entrepeneur
+	Name
+	Password
+	static User[]
+
+// Information holder
+// Structurer
+MaterialAmount
+	Material
+	Amount
+	Unit
+
+// Information holder
+LocatedMaterial
+	MaterialAmount
+	Location
+
+// Information holder
+// Service provider
+Location
+	Street
+	City
+	Department
+	static Distance()
+
+// Information holder
+Price
+	Number
+	Currency   // Moneda
+	Unit
+
+// Information holder
+Invitation
+	Admin
+	Entrepeneur
+	Offer
+	IsPending
+	static Invitation[]
+	Validate()
+
+
+
+// Information holder
+// Structurer
+Offer
+	MaterialAmount
+	Price
+	Location
+	static Offer[]
+
+
+
+// Information holder
+Entrepeneur
+	Name
+	Habilitation[]
+	static Entrepeneur[]
+	CreateReport() -> EntrepeneurReport
+
+
+
+// Information holder
+// Service provider
+Enterprise
+	Name
+	static Enterprise[]
+	CreateReport() -> EnterpriseReport
+	static CreateEnterprise(name) -> Enterprise
+
+
+
+// Information holder
+EnterpriseReport
+	SentMaterialReport[]
+
+
+
+// Information holder
+SentMaterialReport
+	MaterialReport
+	Destination
+
+
+
+// Information holder
+EntrepeneurReport
+	ReceivedMaterialReport[]
+
+
+
+// Information holder
+ReceivedMaterialReport
+	MaterialReport
+	Origin
+
+
+
+// Information holder
+MaterialReport
+	MaterialAmount
+	Date
+
+
+
+// Information holder
+// Structurer
+Material
+	Name
+	Unit[]
+	Requirement[]
+	static Material[]
+
+
+
+// Information holder
+// Controller
+Requirement
+	Type
+	Level
+	IsSatisfied(habilitation[]) -> bool
+	static AreSatisfied(requirement[], habilitation[]) -> bool
+
+
+
+// Information holder
+// Service provider
+Habilitation
+	Type
+	Level
+	Satisfies(Requirement) -> bool
+
+// Interfacer
+// Coordinator
+ConsoleInterface
+
+// Interfacer
+// Controller
+ServerInterface
