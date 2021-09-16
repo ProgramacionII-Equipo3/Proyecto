@@ -6,18 +6,19 @@ namespace Library.Tests
     {
         private System.IO.StringReader reader;
 
-        public StringReader(string str)
+        private IOStringBuilder IoStr;
+
+        public StringReader(string str, IOStringBuilder IoStr)
         {
             this.reader = new System.IO.StringReader(str);
+            this.IoStr = IoStr;
         }
 
         public override int Peek() => this.reader.Peek();
         public override int Read()
         {
             int r = this.reader.Read();
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write((char)r);
-            Console.ResetColor();
+            IoStr?.AddInputChar((char)r);
             return r;
         }
     }

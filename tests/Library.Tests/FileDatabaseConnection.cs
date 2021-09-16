@@ -20,7 +20,7 @@ namespace Library.Tests
         IEnumerable<User> IDatabaseConnection.Users {
             get => JsonData.users.Select(data => data.ToUser());
         }
-        
+
         SignInResult IDatabaseConnection.SignIn(string name, string password)
         {
             UserData userData;

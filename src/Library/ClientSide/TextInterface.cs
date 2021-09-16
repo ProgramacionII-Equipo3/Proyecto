@@ -134,8 +134,8 @@ namespace Library.ClientSide
                 case SignInResult.OkEntrepeneur:   return (new User(UserType.Entrepeneur, name), null);
                 case SignInResult.OkCompany:       return (new User(UserType.Company,     name), null);
 
-                case SignInResult.NotFound:        return (null, "There isn't a user with the specified data.");
-                case SignInResult.InvalidPassword: return (null, "The type, name, or password are invalid.");
+                case SignInResult.NotFound:        return (null, "There isn't a user with the specified name.");
+                case SignInResult.InvalidPassword: return (null, "Incorrect password.");
 
                 default: throw new Exception();
             }
