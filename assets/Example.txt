@@ -1,11 +1,10 @@
 : Insert user
-* Welcome. What kind of user are you?
-  * A: Admin
-  * E: Entrepeneur
-  * C: Company
+* Welcome.
 > A
-* Insert name: > Santiago De Olivera
-* Insert password: > afihwpgb
+* Please insert your name.
+> Santiago De Olivera
+* Please insert your password.
+> afihwpgb
 
 : Initial menu (administrator)
 * Welcome, Santiago De Olivera. What do you want to do?
@@ -14,6 +13,6 @@
 
 # Insert input for making an invitation
 * Very well. Please insert the necessary data.
-* Insert corporation name: > A&C # I don't know any companies which collaborate with circular economy
+* Corporation name: > A&C # I don't know any companies which collaborate with circular economy
 # Insert more data... (it's necessary to determine the data an invitation needs)
 Go to "Initial menu"
