@@ -1,6 +1,6 @@
 using System;
 
-namespace Library
+namespace Library.Tests
 {
     public class StringReader : System.IO.TextReader
     {

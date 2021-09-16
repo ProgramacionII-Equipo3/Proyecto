@@ -11,12 +11,12 @@ namespace Library.ClientSide
     public class TextInterface : IClientInterface
     {
         /// <summary>
-        /// The reader through which the interface reads text
+        /// The reader through which the interface reads text.
         /// </summary>
         private TextReader reader { get; }
 
         /// <summary>
-        /// The writer through which the interface writes text
+        /// The writer through which the interface writes text.
         /// </summary>
         private TextWriter writer { get; }
 
@@ -55,10 +55,10 @@ namespace Library.ClientSide
         }
 
         /// <summary>
-        /// Determines the user type referenced by the given user input
+        /// Determines the user type referenced by the given user input.
         /// </summary>
-        /// <param name="option">The user input to transform into a user type</param>
-        /// <returns>The user type (if it's not a valid user type, returns null)</returns>
+        /// <param name="option">The user input to transform into a user type.</param>
+        /// <returns>The user type (if it's not a valid user type, returns null).</returns>
         private static UserType? stringToUserType(string option)
         {
             switch(option.ToUpper())
@@ -118,7 +118,31 @@ namespace Library.ClientSide
         }
 
         /// <summary>
-        /// Realizes the operation to sign in to the program.
+        /// Attempts to sign in with a concrete user.
+        /// This is a separate method to facilitate debugging.
+        /// </summary>
+        /// <param name="name">The user's name.</param>
+        /// <param name="password">The user's password.</param>
+        /// <param name="conn">The connection to the database.</param>
+        /// <returns>The resulting user if the operation is successful, null if not.</returns>
+        private (User, string) signIn(string name, string password, IDatabaseConnection conn)
+        {
+            SignInResult response = conn.SignIn(name, password);
+            switch(response)
+            {
+                case SignInResult.OkAdmin:         return (new User(UserType.Admin,       name), null);
+                case SignInResult.OkEntrepeneur:   return (new User(UserType.Entrepeneur, name), null);
+                case SignInResult.OkCompany:       return (new User(UserType.Company,     name), null);
+
+                case SignInResult.NotFound:        return (null, "There isn't a user with the specified data.");
+                case SignInResult.InvalidPassword: return (null, "The type, name, or password are invalid.");
+
+                default: throw new Exception();
+            }
+        }
+
+        /// <summary>
+        /// Performs the operation to sign in to the program.
         /// </summary>
         /// <param name="conn">The connection with which the interface accesses the database.</param>
         /// <returns>The user, if the operation succeeded.</returns>
@@ -128,20 +152,9 @@ namespace Library.ClientSide
                    TryUntilValid(() => getPlaceheldInput("Name"), "Invalid answer.")       is string   name
                 && TryUntilValid(() => getPlaceheldInput("Password"), "Invalid password.") is string   password
             )
-            {
-                SignInResult response = conn.SignIn(name, password);
-                switch(response)
-                {
-                    case SignInResult.OkAdmin:         return (new User(UserType.Admin,       name), null);
-                    case SignInResult.OkEntrepeneur:   return (new User(UserType.Entrepeneur, name), null);
-                    case SignInResult.OkCompany:       return (new User(UserType.Company,     name), null);
-
-                    case SignInResult.NotFound:        return (null, "There isn't a user with the specified data.");
-                    case SignInResult.InvalidPassword: return (null, "The type, name, or password are invalid.");
-
-                    default: throw new Exception();
-                }
-            } else return (null, null);
+                return signIn(name, password, conn);
+            else
+                return (null, null);
         }
 
         User IClientInterface.SignIn(IDatabaseConnection conn) =>

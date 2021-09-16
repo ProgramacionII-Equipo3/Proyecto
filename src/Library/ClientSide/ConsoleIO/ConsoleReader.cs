@@ -9,6 +9,9 @@ namespace Library.ClientSide.ConsoleIO
     /// </summary>
     public class ConsoleReader: TextReader
     {
+        /// <summary>
+        /// A space in memory to store a character in order to allow the peek functionality.
+        /// </summary>
         private int bufferedChar = -1;
 
         public override int Peek()

@@ -18,7 +18,7 @@ namespace Library
         /// </summary>
         public string Name { get; }
 
-        internal User(UserType type, string name)
+        public User(UserType type, string name)
         {
             this.Type = type;
             this.Name = name;

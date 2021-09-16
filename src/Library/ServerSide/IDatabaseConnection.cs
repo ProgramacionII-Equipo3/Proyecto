@@ -3,13 +3,17 @@ using System.Collections.Generic;
 
 namespace Library.ServerSide
 {
+    /// <summary>
+    /// This interface acts as an intermediary between the program and what stores the data permanently
+    /// (it could be a file, a database, or any other form of permanent memory).
+    /// </summary>
     public interface IDatabaseConnection
     {
         /// <summary>
-        /// Retrieves a list of users from the database.
+        /// Retrieves the list of users from the database.
         /// </summary>
-        /// <returns>The list of users.</returns>
-        IEnumerable<User> GetUsers();
+        /// <value>The list of users.</value>
+        IEnumerable<User> Users { get; }
 
         /// <summary>
         /// Confirms whether a user can sign in with the given type, name, and password.

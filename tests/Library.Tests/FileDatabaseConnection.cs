@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Library;
+using Library.ServerSide;
 
-namespace Library.ServerSide.FileIO
+namespace Library.Tests
 {
+    /// <summary>
+    /// This class acts as an intermediary between the program and a .json file, which acts as the permanent memory.
+    /// </summary>
     public class FileDatabaseConnection : IDatabaseConnection
     {
         private readonly string path;
 
         private JsonData JsonData { get => JsonConvert.DeserializeObject<JsonData>(File.ReadAllText(path)); }
 
-        IEnumerable<User> IDatabaseConnection.GetUsers() =>
-            JsonData.users.Select(data => data.ToUser());
+        IEnumerable<User> IDatabaseConnection.Users {
+            get => JsonData.users.Select(data => data.ToUser());
+        }
         
         SignInResult IDatabaseConnection.SignIn(string name, string password)
         {

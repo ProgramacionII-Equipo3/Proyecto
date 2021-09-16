@@ -1,4 +1,7 @@
 using NUnit.Framework;
+using Library.ClientSide;
+using Library.ClientSide.ConsoleIO;
+using Library.ServerSide;
 
 namespace Library.Tests
 {
@@ -12,7 +15,12 @@ namespace Library.Tests
         [Test]
         public void Test1()
         {
-            Assert.Pass();
+            StringReader reader = new StringReader(
+                "Santiago De Olivera\n123\nnBruno\nABC\n"
+            );
+            IClientInterface clientInterface = new TextInterface(reader, new ConsoleWriter());
+            IDatabaseConnection connection = new FileDatabaseConnection(@"../../Assets/Data.json");
+            Console.WriteLine(clientInterface.SignIn(connection));
         }
     }
 }
