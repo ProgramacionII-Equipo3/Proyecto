@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using Library;
-using Library.ServerSide;
 
-namespace Library.Tests
+namespace Library.ServerSide
 {
     /// <summary>
     /// This class acts as an intermediary between the program and a .json file, which acts as the permanent memory.

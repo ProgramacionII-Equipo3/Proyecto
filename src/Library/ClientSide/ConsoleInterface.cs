@@ -1,6 +1,6 @@
 using Library.ServerSide;
-using Library.ClientSide.ConsoleIO;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Library.ClientSide
@@ -8,30 +8,17 @@ namespace Library.ClientSide
     /// <summary>
     /// This class represents a client interface which works through text flows.
     /// </summary>
-    public class TextInterface : IClientInterface
+    public class ConsoleInterface : IClientInterface
     {
         /// <summary>
-        /// The reader through which the interface reads text.
+        /// The current state stack of the interface.
+        /// It expresses the paths of menus and options the user went through.
+        /// Its main purpose is to help the player remember what it was doing.
         /// </summary>
-        private TextReader reader { get; }
+        private List<string> stateStack = new List<string>();
 
-        /// <summary>
-        /// The writer through which the interface writes text.
-        /// </summary>
-        private TextWriter writer { get; }
-
-        public TextInterface(TextReader reader, TextWriter writer)
-        {
-            this.reader = reader;
-            this.writer = writer;
-        }
-
-        /// <summary>
-        /// Creates a text interface which communicates through the console.
-        /// </summary>
-        /// <returns>A text interface which communicates through the console.</returns>
-        public static TextInterface FromConsole() =>
-            new TextInterface(new ConsoleReader(), new ConsoleWriter());
+        private string stateStackStr() =>
+            string.Join(" >> ", this.stateStack);
 
         /// <summary>
         /// Retrieves data from the console after printing a prompt to it.
@@ -39,8 +26,8 @@ namespace Library.ClientSide
         /// <returns>The user input</returns>
         private string getInput()
         {
-            writer.Write($"> ");
-            return reader.ReadLine();
+            Console.Write($"> ");
+            return Console.ReadLine();
         }
 
         /// <summary>
@@ -50,8 +37,8 @@ namespace Library.ClientSide
         /// <returns>The user input</returns>
         private string getPlaceheldInput(string name)
         {
-            writer.Write($"{name}: ");
-            return reader.ReadLine();
+            Console.Write($"{name}: ");
+            return Console.ReadLine();
         }
 
         /// <summary>
@@ -76,9 +63,9 @@ namespace Library.ClientSide
         /// <returns>Whether the user wants to retry</returns>
         private bool TryAgain()
         {
-            writer.WriteLine("Press \"q\" to quit...");
-            writer.WriteLine("Press any other key to try again...");
-            char r = (char)reader.Read();
+            Console.WriteLine("Press \"q\" to quit...");
+            Console.WriteLine("Press any other key to try again...");
+            char r = (char)Console.Read();
             return !("qQ\uffff".Contains(r));
         }
 
@@ -95,7 +82,8 @@ namespace Library.ClientSide
             {
                 T r = func();
                 if(r is T result) return result;
-                if(msg != null) writer.WriteLine(msg);
+                Console.WriteLine();
+                if(msg != null) Console.WriteLine(msg);
                 if(!TryAgain()) return default(T);
             }
         }
@@ -112,7 +100,7 @@ namespace Library.ClientSide
             {
                 var (r, msg) = func();
                 if(r is T result) return result;
-                if(msg != null) writer.WriteLine(msg);
+                if(msg != null) Console.WriteLine(msg);
                 if(!TryAgain()) return default(T);
             }
         }
