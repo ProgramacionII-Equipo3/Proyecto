@@ -14,5 +14,18 @@ namespace Library
             }
             return r;
         }
+
+        public static string CheckStrings(params (string, string)[] argNames)
+        {
+            List<string> r = new List<string>();
+            foreach(var (name, value) in argNames)
+            {
+                if(string.IsNullOrWhiteSpace(value))
+                    r.Add(name);
+            }
+            if(r.Count == 0) return null;
+
+            return "The following required arguments are missing: " + string.Join(", ", r);
+        }
     }
 }

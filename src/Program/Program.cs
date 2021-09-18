@@ -10,7 +10,18 @@ namespace Program
         {
             IClientInterface cli = new ConsoleInterface();
             IDatabaseConnection conn = new FileDatabaseConnection(@"../../Assets/Data.json");
-            
+            Library.User user = cli.SignIn(conn);
+
+            Console.WriteLine();
+
+            if(user == null)
+            {
+                Console.WriteLine("No user");
+                return;
+            }
+
+            Console.WriteLine(user.Type.ToString());
+            Console.WriteLine(user.Name);
         }
     }
 }

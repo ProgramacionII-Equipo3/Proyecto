@@ -19,14 +19,23 @@ namespace Library.ClientSide
         /// This attribute stores the chain of operations the program's state is currently in.
         /// Its main purpose is to remind the user, in case they forget what they were doing.
         /// </summary>
-        private List<string> stateStack = new List<string>();
+        private Stack<string> stateStack = new Stack<string>();
 
         /// <summary>
         /// The stack state of the program, prepared to be printed into console.
         /// </summary>
-        private ConsoleText stateString
+        private string stateString
         {
-            get => ConsoleText.FromStrings((string.Join(" >> ", this.stateStack), ConsoleColor.White, ConsoleColor.Black));
+            get => string.Join(" >> ", this.stateStack);
+        }
+
+        private void resetConsole()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(stateString);
+            Console.WriteLine();
+            Console.ResetColor();
         }
         
         /// <summary>
@@ -36,12 +45,10 @@ namespace Library.ClientSide
         /// </summary>
         /// <param name="prevText">The message to show before asking for input. It can be very long.</param>
         /// <returns>The input given by the user.</returns>
-        private string GetInput(ConsoleText prevText)
+        private string GetInput(string prevText)
         {
-            Console.Clear();
-            stateString.ConsolePrint();
-            Console.WriteLine();
-            prevText.ConsolePrint();
+            resetConsole();
+            Console.Write(prevText);
             Console.ForegroundColor = INPUT_FOREGROUND;
             string r =  Console.ReadLine();
             Console.ResetColor();
@@ -55,12 +62,10 @@ namespace Library.ClientSide
         /// </summary>
         /// <param name="prevText">The message to show before asking for input. It can be very long.</param>
         /// <returns>The character given by the user.</returns>
-        private char GetChar(ConsoleText prevText)
+        private char GetChar(string prevText)
         {
-            Console.Clear();
-            stateString.ConsolePrint();
-            Console.WriteLine();
-            prevText.ConsolePrint();
+            resetConsole();
+            Console.Write(prevText);
             Console.ForegroundColor = INPUT_FOREGROUND;
             char r = (char)Console.Read();
             Console.ResetColor();
@@ -73,13 +78,7 @@ namespace Library.ClientSide
         /// <returns>Whether the user wants to retry</returns>
         private bool TryAgain(string msg)
         {
-            char r = GetChar(
-                ConsoleText.FromStrings(
-                    (msg,                                       null, null),
-                    ("\nPress \"q\" to quit",                   null, null),
-                    ("\nPress any other key to try again...\n", null, null)
-                )
-            );
+            char r = GetChar(msg + "\nPress \"q\" to quit\nPress any other key to try again...\n");
             return !("qQ\uffff".Contains(r));
         }
 
@@ -100,72 +99,121 @@ namespace Library.ClientSide
             }
         }
 
-        private Dictionary<string, string> GetFormInput(ConsoleText prevText, params string[] argNames) =>
-            GetFormInput(prevText, argNames.Aggregate(
+        private T GetFormInput<T>(string state, string prevText, Func<Dictionary<string, string>, (T, string)> func, params string[] argNames)
+        {
+            stateStack.Push(state);
+
+            var args = argNames.Aggregate(
                 new List<string>(),
                 (list, v) =>
                 {
                     if(!list.Contains(v)) list.Add(v);
                     return list;
                 }
-            ).Select<string, (string, string)>(name => (name, "")).ToArray());
+            ).Select<string, (string, string)>(name => (name, "")).ToArray();
 
-        private Dictionary<string, string> GetFormInput(ConsoleText prevText, params (string, string)[] args)
+            while(true)
+            {
+                GetFormInput(prevText, ref args);
+                var (r, msg) = func(Utils.DictionaryFromList(args));
+                if(r is T result)
+                {
+                    stateStack.Pop();
+                    return result;
+                }
+                resetConsole();
+                if(msg != null && !TryAgain(msg))
+                {
+                    stateStack.Pop();
+                    return default(T);
+                }
+            }
+        }
+
+        private void GetFormInput(string prevText, ref (string, string)[] args)
         {
-            int state = 0;
+            int fieldPointer = 0;
             bool writing = false;
             while(true)
             {
-                Console.Clear();
-                stateString.ConsolePrint();
-                Console.WriteLine();
-                prevText.ConsolePrint();
-                Console.WriteLine();
+                resetConsole();
+                Console.WriteLine(prevText);
                 Console.WriteLine();
                 foreach(var (name, value, i) in args.Select((data, i) => (data.Item1, data.Item2, i)))
                 {
-                    Console.BackgroundColor = i == state ? ConsoleColor.Cyan : ConsoleColor.Black;
-                    Console.ForegroundColor = i == state ? ConsoleColor.Black : ConsoleColor.Cyan;
-                    Console.WriteLine($"name: {value}");
+                    Console.BackgroundColor = i == fieldPointer ? ConsoleColor.Cyan : ConsoleColor.Black;
+                    Console.ForegroundColor = i == fieldPointer ? ConsoleColor.Black : ConsoleColor.Cyan;
+                    Console.Write(name);
+                    Console.ResetColor();
+                    Console.WriteLine(": " + value);
                 }
-                Console.ResetColor();
                 Console.WriteLine();
-                Console.Write(args[state].Item1);
+                Console.WriteLine(writing ? "WRITE" : "SELECT");
+                Console.Write(args[fieldPointer].Item1);
                 Console.Write(": ");
                 if(writing)
                 {
-                    args[state].Item2 = Console.ReadLine();
+                    args[fieldPointer].Item2 = Console.ReadLine();
                     writing = false;
+                    Console.Write("EXTRA:");
+                    Console.ReadLine();
                 } else
                 {
-                    Console.WriteLine(args[state].Item2);
+                    Console.WriteLine(args[fieldPointer].Item2);
                     while(true)
                     {
-                        int c = Console.Read();
-                        if(c == 0x26 && state > 0)
-                        { // UP
-                            state--;
-                            continue;
-                        }
-                        else if(c == 0x28 && state < args.Length - 1)
-                        { // DOWN
-                            state++;
-                            continue;
-                        }
-                        else if(c == 0x27)
-                        { // RIGHT
-                            writing = true;
-                            continue;
-                        }
-                        else if(c == 0x0D)
+                        ConsoleKey c = Console.ReadKey().Key;
+                        if(c == ConsoleKey.UpArrow && fieldPointer > 0)
                         {
-                            return Utils.DictionaryFromList(args);
+                            fieldPointer--;
+                            break;
                         }
+                        else if(c == ConsoleKey.DownArrow && fieldPointer < args.Length - 1)
+                        {
+                            fieldPointer++;
+                            break;
+                        }
+                        else if(c == ConsoleKey.RightArrow)
+                        {
+                            writing = true;
+                            break;
+                        }
+                        else if(c == ConsoleKey.Enter)
+                            return;
                     }
                 }
             }
         }
 
-        User IClientInterface.SignIn(IDatabaseConnection conn);
+        private (User, string) signIn(string name, string password, IDatabaseConnection conn)
+        {
+            name = name.Trim();
+            password = password.Trim();
+            if(
+                Utils.CheckStrings( ("name", name), ("password", password) )
+                is string error
+            ) return (null, error);
+
+            SignInResult response = conn.SignIn(name, password);
+            switch(response)
+            {
+                case SignInResult.OkAdmin:         return (new User(UserType.Admin,       name), null);
+                case SignInResult.OkEntrepeneur:   return (new User(UserType.Entrepeneur, name), null);
+                case SignInResult.OkCompany:       return (new User(UserType.Company,     name), null);
+
+                case SignInResult.NotFound:        return (null, "There isn't a user with the specified name.");
+                case SignInResult.InvalidPassword: return (null, "Incorrect password.");
+
+                default: throw new Exception();
+            }
+        }
+
+        User IClientInterface.SignIn(IDatabaseConnection conn) =>
+            GetFormInput<User>(
+                "SIGN-IN",
+                "Please insert the necessary data.",
+                args => signIn(args["name"], args["password"], conn),
+                "name", "password"
+            );
     }
 }
