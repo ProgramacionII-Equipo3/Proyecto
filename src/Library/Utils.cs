@@ -5,6 +5,13 @@ namespace Library
 {
     public static class Utils
     {
+        public static ConsoleText ToConsole(
+            this string str,
+            ConsoleColor? backgroundColor = null,
+            ConsoleColor? foregroundColor = null
+        ) =>
+            ConsoleText.FromStrings((str, null, null));
+
         public static Dictionary<TKey, TValue> DictionaryFromList<TKey, TValue>((TKey, TValue)[] list)
         {
             Dictionary<TKey, TValue> r = new Dictionary<TKey, TValue>();

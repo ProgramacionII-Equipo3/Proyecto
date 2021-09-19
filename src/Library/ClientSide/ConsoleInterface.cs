@@ -24,28 +24,29 @@ namespace Library.ClientSide
         /// <summary>
         /// The stack state of the program, prepared to be printed into console.
         /// </summary>
-        private string stateString
+        private ConsoleText stateString
         {
-            get => string.Join(" >> ", this.stateStack);
+            get => (string.Join(" >> ", this.stateStack) + '\n').ToConsole(ConsoleColor.Yellow, ConsoleColor.Black);
         }
 
+        /// <summary>
+        /// Clears the console and prints the stack string.
+        /// </summary>
         private void resetConsole()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(stateString);
+            stateString.ConsolePrint();
             Console.WriteLine();
-            Console.ResetColor();
         }
         
         /// <summary>
         /// Returns input from the user after showing a message.
-        /// Together with GetChar(string), they are the only functions through which the object will interact with the console.
+        /// Together with GetChar and GetFormInput, they are the only functions through which the object will interact with the console.
         /// Does not add line break to message.
         /// </summary>
         /// <param name="prevText">The message to show before asking for input. It can be very long.</param>
         /// <returns>The input given by the user.</returns>
-        private string GetInput(string prevText)
+        private string getInput(string prevText)
         {
             resetConsole();
             Console.Write(prevText);
@@ -57,17 +58,17 @@ namespace Library.ClientSide
 
         /// <summary>
         /// Returns a character from the user after showing a message.
-        /// Together with GetInput(string), they are the only functions through which the object will interact with the console.
+        /// Together with GetInput and GetFormInput, they are the only functions through which the object will interact with the console.
         /// Does not add line break to message.
         /// </summary>
         /// <param name="prevText">The message to show before asking for input. It can be very long.</param>
         /// <returns>The character given by the user.</returns>
-        private char GetChar(string prevText)
+        private char getChar(string prevText)
         {
             resetConsole();
             Console.Write(prevText);
             Console.ForegroundColor = INPUT_FOREGROUND;
-            char r = (char)Console.Read();
+            char r = Console.ReadKey(true).KeyChar;
             Console.ResetColor();
             return r;
         }
@@ -76,9 +77,9 @@ namespace Library.ClientSide
         /// Asks the user if they want to retry an operation after failing before.
         /// </summary>
         /// <returns>Whether the user wants to retry</returns>
-        private bool TryAgain(string msg)
+        private bool tryAgain(string msg)
         {
-            char r = GetChar(msg + "\nPress \"q\" to quit\nPress any other key to try again...\n");
+            char r = getChar(msg + "\nPress \"q\" to quit\nPress any other key to try again...\n");
             return !("qQ\uffff".Contains(r));
         }
 
@@ -88,20 +89,35 @@ namespace Library.ClientSide
         /// <param name="func">The function to execute to retrieve the data, or the error to print before asking to try again.</param>
         /// <typeparam name="T">The type of the data to retrieve.</typeparam>
         /// <returns>The data retrieved by func, if it did.</returns>
-        private T TryUntilValid<T>(Func<(T, string)> func)
+        private T tryUntilValid<T>(Func<(T, string)> func)
         {
             while(true)
             {
                 var (r, msg) = func();
                 if(r is T result) return result;
-                if(msg != null && !TryAgain(msg))
+                if(msg != null && !tryAgain(msg))
                     return default(T);
             }
         }
 
-        private T GetFormInput<T>(string state, string prevText, Func<Dictionary<string, string>, (T, string)> func, params string[] argNames)
+        /// <summary>
+        /// Receives input about several data (as if it was a form)
+        /// and returns the result of processing that information, or null if it was a failure.
+        /// Together with GetInput and GetChar, they are the only functions through which the object will interact with the console.
+        /// </summary>
+        /// <param name="state">The state to push to the stateStack</param>
+        /// <param name="prevText">A placeholder text to print before asking for data.</param>
+        /// <param name="func">The function which describes what to do with the given data.</param>
+        /// <param name="argNames">The name of the arguments asked to the user.</param>
+        /// <typeparam name="T">The type returned by the processing function.</typeparam>
+        /// <returns>The resulting object if there were no issues in the process, null if there were.</returns>
+        private T getFormInput<T>(
+            string state,
+            string prevText,
+            Func<Dictionary<string, string>, (T, string)> func,
+            params string[] argNames)
         {
-            stateStack.Push(state);
+            stateStack.Push(state.Trim());
 
             var args = argNames.Aggregate(
                 new List<string>(),
@@ -110,30 +126,29 @@ namespace Library.ClientSide
                     if(!list.Contains(v)) list.Add(v);
                     return list;
                 }
-            ).Select<string, (string, string)>(name => (name, "")).ToArray();
+            ).Where(name => !string.IsNullOrWhiteSpace(name))
+             .Select<string, (string, string)>(name => (name.Trim(), ""))
+             .ToArray();
 
-            while(true)
-            {
-                GetFormInput(prevText, ref args);
-                var (r, msg) = func(Utils.DictionaryFromList(args));
-                if(r is T result)
-                {
-                    stateStack.Pop();
-                    return result;
-                }
-                resetConsole();
-                if(msg != null && !TryAgain(msg))
-                {
-                    stateStack.Pop();
-                    return default(T);
-                }
-            }
+            T result = tryUntilValid<T>(() => {
+                if(!getFormInput(prevText, ref args)) return (default(T), null);
+                return func(Utils.DictionaryFromList(args));
+            });
+            stateStack.Pop();
+            return result;
         }
 
-        private void GetFormInput(string prevText, ref (string, string)[] args)
+        /// <summary>
+        /// Receives form data from the user to process, and stores it in a referenced array.
+        /// </summary>
+        /// <param name="prevText">A placeholder text to print before asking for data.</param>
+        /// <param name="args">A reference the arguments asked to the user.</param>
+        /// <returns>Whether the user didn't want to go back.</returns>
+        private bool getFormInput(string prevText, ref (string, string)[] args)
         {
             int fieldPointer = 0;
             bool writing = false;
+
             while(true)
             {
                 resetConsole();
@@ -155,14 +170,12 @@ namespace Library.ClientSide
                 {
                     args[fieldPointer].Item2 = Console.ReadLine();
                     writing = false;
-                    Console.Write("EXTRA:");
-                    Console.ReadLine();
                 } else
                 {
                     Console.WriteLine(args[fieldPointer].Item2);
                     while(true)
                     {
-                        ConsoleKey c = Console.ReadKey().Key;
+                        ConsoleKey c = Console.ReadKey(true).Key;
                         if(c == ConsoleKey.UpArrow && fieldPointer > 0)
                         {
                             fieldPointer--;
@@ -179,7 +192,9 @@ namespace Library.ClientSide
                             break;
                         }
                         else if(c == ConsoleKey.Enter)
-                            return;
+                            return true;
+                        else if(c == ConsoleKey.Escape)
+                            return false;
                     }
                 }
             }
@@ -209,7 +224,7 @@ namespace Library.ClientSide
         }
 
         User IClientInterface.SignIn(IDatabaseConnection conn) =>
-            GetFormInput<User>(
+            getFormInput<User>(
                 "SIGN-IN",
                 "Please insert the necessary data.",
                 args => signIn(args["name"], args["password"], conn),
