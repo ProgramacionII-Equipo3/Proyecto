@@ -9,17 +9,20 @@ namespace Library.ServerSide
     /// <summary>
     /// This class acts as an intermediary between the program and a .json file, which acts as the permanent memory.
     /// </summary>
-    public class FileDatabaseConnection : IDatabaseConnection
+    public class FileMemory : IMemory
     {
         private readonly string path;
 
-        private JsonData JsonData { get => JsonConvert.DeserializeObject<JsonData>(File.ReadAllText(path)); }
+        private JsonData JsonData {
+            get => JsonConvert.DeserializeObject<JsonData>(File.ReadAllText(path));
+            set => File.WriteAllText(path, JsonConvert.SerializeObject(value));
+        }
 
-        IEnumerable<User> IDatabaseConnection.Users {
+        IEnumerable<User> IMemory.Users {
             get => JsonData.users.Select(data => data.ToUser());
         }
 
-        SignInResult IDatabaseConnection.SignIn(string name, string password)
+        SignInResult IMemory.SignIn(string name, string password)
         {
             UserData userData;
             try
@@ -41,7 +44,7 @@ namespace Library.ServerSide
             throw new Exception();
         }
 
-        public FileDatabaseConnection(string path)
+        public FileMemory(string path)
         {
             this.path = path;
         }

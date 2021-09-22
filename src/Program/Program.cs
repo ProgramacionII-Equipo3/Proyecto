@@ -1,4 +1,5 @@
 ﻿using System;
+using Library;
 using Library.ClientSide;
 using Library.ServerSide;
 
@@ -8,8 +9,9 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            IClientInterface cli = new ConsoleInterface();
-            IDatabaseConnection conn = new FileDatabaseConnection(@"../../Assets/Data.json");
+            IClient<char> cli = new ConsoleClient();
+            IMemory conn = new FileMemory(@"../../Assets/Data.json");
+            IOManager manager = new IOManager(cli, conn);
             Library.User user = cli.SignIn(conn);
 
             Console.WriteLine();

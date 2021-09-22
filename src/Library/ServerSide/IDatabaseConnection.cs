@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace Library.ServerSide
 {
     /// <summary>
-    /// This interface acts as an intermediary between the program and what stores the data permanently
-    /// (it could be a file, a database, or any other form of permanent memory).
+    /// This interface acts as an intermediary between the program and a form of permanent memory
+    /// (which could be, among others, a file or a database).
     /// </summary>
-    public interface IDatabaseConnection
+    public interface IMemory
     {
         /// <summary>
         /// Retrieves the list of users from the database.
