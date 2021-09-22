@@ -8,20 +8,14 @@ namespace Library.ClientSide
     /// <summary>
     /// This interface organizes the interactions between people and the program.
     /// </summary>
-    /// <typeparam name="T">The type returned by getSingle.</typeparam>
-    public interface IClient<T>
+    public interface IClient
     {
         /// <summary>
         /// Returns a line of user input.
         /// </summary>
+        /// <param name="prevText">A placeholder text to show before asking for data.</param>
         /// <returns>The input given by the user.</returns>
-        string GetInput();
-
-        /// <summary>
-        /// Returns a simple piece of user input, such as a character in the console, or a button enum in a GUI.
-        /// </summary>
-        /// <returns>The simple piece of user input.</returns>
-        T GetSingle();
+        string GetInput(string prevText);
 
         /// <summary>
         /// Asks the user if they want to retry an operation after failing before.
@@ -50,7 +44,7 @@ namespace Library.ClientSide
         /// <summary>
         /// Receives form data from the user to process, and stores it in a referenced array.
         /// </summary>
-        /// <param name="prevText">A placeholder text to print before asking for data.</param>
+        /// <param name="prevText">A placeholder text to show before asking for data.</param>
         /// <param name="args">A reference the arguments asked to the user.</param>
         /// <returns>Whether the user didn't want to go back.</returns>
         bool GetFormInput(string prevText, ref (string, string)[] args);
@@ -61,7 +55,7 @@ namespace Library.ClientSide
         /// Together with GetInput and GetChar, they are the only functions through which the object will interact with the console.
         /// </summary>
         /// <param name="state">The state to push to the stateStack</param>
-        /// <param name="prevText">A placeholder text to print before asking for data.</param>
+        /// <param name="prevText">A placeholder text to show before asking for data.</param>
         /// <param name="func">The function which describes what to do with the given data.</param>
         /// <param name="argNames">The name of the arguments asked to the user.</param>
         /// <typeparam name="T">The type returned by the processing function.</typeparam>
@@ -82,7 +76,7 @@ namespace Library.ClientSide
              .Select<string, (string, string)>(name => (name.Trim(), ""))
              .ToArray();
 
-            U result = (this as IClient<char>).TryUntilValid<U>(() => {
+            U result = TryUntilValid<U>(() => {
                 if(!GetFormInput(prevText, ref args)) return (default(U), null);
                 return func(Utils.DictionaryFromList(args));
             });

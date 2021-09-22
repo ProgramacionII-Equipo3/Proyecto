@@ -12,14 +12,14 @@ namespace Library
         /// <summary>
         /// The program's input manager
         /// </summary>
-        private readonly IClient<char> client;
+        private readonly IClient client;
 
         /// <summary>
         /// The program's memory manager
         /// </summary>
         private readonly IMemory memory;
 
-        public IOManager(IClient<char> client, IMemory memory)
+        public IOManager(IClient client, IMemory memory)
         {
             this.client = client;
             this.memory = memory;
@@ -53,10 +53,10 @@ namespace Library
         /// </summary>
         /// <param name="conn">The connection with which the interface validates the given user.</param>
         /// <returns>A user object representing the signed in user, or null if the operation didn't work.</returns>
-        public User SignIn(IMemory conn) =>
-            (this as IClient<char>).GetFormInput<User>(
+        public User SignIn() =>
+            client.GetFormInput<User>(
                 "Please insert the necessary data.",
-                args => signIn(args["name"], args["password"], conn),
+                args => signIn(args["name"], args["password"], memory),
                 "name", "password"
             );
 

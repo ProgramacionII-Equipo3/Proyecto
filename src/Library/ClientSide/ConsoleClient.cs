@@ -8,7 +8,7 @@ namespace Library.ClientSide
     /// <summary>
     /// This class represents a client interface which works through text flows.
     /// </summary>
-    public class ConsoleClient : IClient<char>
+    public class ConsoleClient : IClient
     {
         /// <summary>
         /// The foreground color of the input fields
@@ -30,11 +30,6 @@ namespace Library.ClientSide
         }
 
         /// <summary>
-        /// The text to print before asking for data.
-        /// </summary>
-        public string PrevText;
-
-        /// <summary>
         /// Clears the console and prints the stack string.
         /// </summary>
         private void resetConsole()
@@ -44,34 +39,37 @@ namespace Library.ClientSide
             Console.WriteLine();
         }
         
-        string IClient<char>.GetInput()
+        string IClient.GetInput(string prevText)
         {
             resetConsole();
-            Console.Write(PrevText);
+            Console.Write(prevText);
             Console.ForegroundColor = INPUT_FOREGROUND;
             string r =  Console.ReadLine();
             Console.ResetColor();
             return r;
         }
 
-        char IClient<char>.GetSingle()
+        /// <summary>
+        /// Returns a character from user input.
+        /// </summary>
+        /// <returns>The character inserted by the user.</returns>
+        private char getSingle(string prevText)
         {
             resetConsole();
-            Console.Write(PrevText);
+            Console.Write(prevText);
             Console.ForegroundColor = INPUT_FOREGROUND;
             char r = Console.ReadKey(true).KeyChar;
             Console.ResetColor();
             return r;
         }
 
-        bool IClient<char>.TryAgain(string msg)
+        bool IClient.TryAgain(string msg)
         {
-            PrevText = msg + "\nPress \"q\" to quit\nPress any other key to try again...\n";
-            char r = (this as IClient<char>).GetSingle();
+            char r = getSingle(msg + "\nPress \"q\" to quit\nPress any other key to try again...\n");
             return !("qQ\uffff".Contains(r));
         }
 
-        bool IClient<char>.GetFormInput(string prevText, ref (string, string)[] args)
+        bool IClient.GetFormInput(string prevText, ref (string, string)[] args)
         {
             int fieldPointer = 0;
             bool writing = false;
