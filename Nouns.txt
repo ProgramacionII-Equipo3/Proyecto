@@ -21,26 +21,26 @@ User //4
 
 // Information holder
 // Structurer
-MaterialAmount //1
+MaterialAmount //1 (Martín)
 	Material
 	Amount
 	Unit
 
 // Information holder
-LocatedMaterial //1
+LocatedMaterial //1 (Martín)
 	MaterialAmount
 	Location
 
 // Information holder
 // Service provider
-Location //1
+Location //1 (Martín)
 	Street
 	City
 	Department
 	static Distance()
 
 // Information holder
-Price //1
+Price //1 (Martín)
 	Number
 	Currency   // Moneda
 	Unit
@@ -67,7 +67,7 @@ Offer //4
 
 
 // Information holder
-Entrepeneur //2
+Entrepeneur //2 (Bianca)
 	Name
 	Habilitation[]
 	static Entrepeneur[]
@@ -77,7 +77,7 @@ Entrepeneur //2
 
 // Information holder
 // Service provider
-Enterprise //2
+Enterprise //2 (Bianca)
 	Name
 	static Enterprise[]
 	CreateReport() -> EnterpriseReport
@@ -120,7 +120,7 @@ MaterialReport //3
 
 // Information holder
 // Structurer
-Material //1
+Material //1 (Martín)
 	Name
 	Unit[]
 	Requirement[]
@@ -130,7 +130,7 @@ Material //1
 
 // Information holder
 // Controller
-Requirement //2
+Requirement //2 (Bianca)
 	Type
 	Level
 	IsSatisfied(habilitation[]) -> bool
@@ -140,7 +140,7 @@ Requirement //2
 
 // Information holder
 // Service provider
-Habilitation //2
+Habilitation //2 (Bianca)
 	Type
 	Level
 	Satisfies(Requirement) -> bool
