@@ -25,7 +25,7 @@ namespace Library
             this.memory = memory;
         }
 
-        private (User, string) signIn(string name, string password, IMemory conn)
+        private (User, string) signIn(string name, string password)
         {
             name = name.Trim();
             password = password.Trim();
@@ -34,7 +34,7 @@ namespace Library
                 is string error
             ) return (null, error);
 
-            SignInResult response = conn.SignIn(name, password);
+            SignInResult response = memory.SignIn(name, password);
             switch(response)
             {
                 case SignInResult.OkAdmin:         return (new User(UserType.Admin,       name), null);
@@ -56,7 +56,7 @@ namespace Library
         public User SignIn() =>
             client.GetFormInput<User>(
                 "Please insert the necessary data.",
-                args => signIn(args["name"], args["password"], memory),
+                args => signIn(args["name"], args["password"]),
                 "name", "password"
             );
 
