@@ -24,7 +24,8 @@
       "collaborators": [
         "User",
         "Offer",
-        "ServerInterface"
+        "ServerInterface",
+        "InvitationState"
       ]
     },
     {

@@ -48,7 +48,7 @@ Price //1 (Martín)
 // Information holder
 Invitation //4 (Santiago)
 	Admin
-	Entrepeneur
+	Company
 	Offer
 	IsPending
 	static Invitation[]
