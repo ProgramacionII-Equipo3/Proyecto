@@ -1,0 +1,68 @@
+[
+    {
+      "name": "User",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Store information about a program user (type and name)"
+      ],
+      "collaborators": [
+        "Type"
+      ]
+    },
+    {
+      "name": "Invitation",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Store information about an invitation (the admin who sent the invitation, the company who receives it, the offer it's suggested to make)",
+        "Store its current state (pending, accepted, or rejected).",
+        "Validate the invitation when the company orders to do so."
+      ],
+      "collaborators": [
+        "User",
+        "Offer",
+        "ServerInterface"
+      ]
+    },
+    {
+      "name": "Offer",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Stores information about an offer of materials (the material and amount, the price, and the location of the materials)"
+      ],
+      "collaborators": [
+        "MaterialAmount",
+        "Price",
+        "Location"
+      ]
+    },
+    {
+      "name": "ConsoleInterface (a.k.a. IClient)",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 3,
+      "responsibilities": [
+        "Communicate with the user via the usual input methods"
+      ],
+      "collaborators": [
+        ""
+      ]
+    },
+    {
+      "name": "ServerInterface (a.k.a. IMemory)",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 3,
+      "responsibilities": [
+        "Communicate with the permanent memory of the program (which can be, among other things, a file or a database)"
+      ],
+      "collaborators": [
+        ""
+      ]
+    }
+  ]
