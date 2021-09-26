@@ -1,6 +1,6 @@
 [
     {
-      "name": "Enterprise",
+      "name": "Company",
       "superclasses": "",
       "subclasses": "",
       "type": 1,
@@ -9,7 +9,7 @@
         "Indicar las habilitaciones que necesitará la empresa"
       ],
       "collaborators": [
-        "EnterpriseReport"
+        "CompanyReport"
       ]
     },
     {
