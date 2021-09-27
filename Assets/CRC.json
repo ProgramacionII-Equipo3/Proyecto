@@ -105,7 +105,7 @@
       "type": 1,
       "responsibilities": [
         "Guardar la información de los requisitos (tipo y nivel)",
-        "Indicar cuándo se cumplen los requisitos",
+        "Indicar cuándo se cumplen los requisitos"
       ],
       "collaborators": [
         ""
