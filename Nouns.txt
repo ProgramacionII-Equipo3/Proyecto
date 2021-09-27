@@ -13,7 +13,7 @@
 
 // Information holder
 // Service provider
-User //4
+User //4 (Santiago)
 	Type   // Either administer, enterprise, or entrepeneur
 	Name
 	Password
@@ -46,9 +46,9 @@ Price //1 (Martín)
 	Unit
 
 // Information holder
-Invitation //4
+Invitation //4 (Santiago)
 	Admin
-	Entrepeneur
+	Company
 	Offer
 	IsPending
 	static Invitation[]
@@ -58,7 +58,7 @@ Invitation //4
 
 // Information holder
 // Structurer
-Offer //4
+Offer //4 (Santiago)
 	MaterialAmount
 	Price
 	Location
@@ -86,33 +86,33 @@ Enterprise //2 (Bianca)
 
 
 // Information holder
-EnterpriseReport //3
+EnterpriseReport //3 (Juan)
 	SentMaterialReport[]
 
 
 
 // Information holder
-SentMaterialReport //3
+SentMaterialReport //3 (Juan)
 	MaterialReport
 	Destination
 
 
 
 // Information holder
-EntrepeneurReport //3
+EntrepeneurReport //3 (Juan)
 	ReceivedMaterialReport[]
 
 
 
 // Information holder
-ReceivedMaterialReport //3
+ReceivedMaterialReport //3 (Juan)
 	MaterialReport
 	Origin
 
 
 
 // Information holder
-MaterialReport //3
+MaterialReport //3 (Juan)
 	MaterialAmount
 	Date
 
@@ -147,8 +147,8 @@ Habilitation //2 (Bianca)
 
 // Interfacer
 // Coordinator
-ConsoleInterface //4
+ConsoleInterface //4 (Santiago)
 
 // Interfacer
 // Controller
-ServerInterface //4
+ServerInterface //4 (Santiago)
