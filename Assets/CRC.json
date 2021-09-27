@@ -48,7 +48,7 @@
       ]
     },
     {
-      "name": "EnterpriseReport",
+      "name": "CompanyReport",
       "superclasses": "SentMaterialReport",
       "subclasses": "",
       "type": 3,
@@ -202,7 +202,7 @@
       "collaborators": [
         "User",
         "Offer",
-        "ServerInterface",
+        "IMemory",
         "InvitationState"
       ]
     },
@@ -221,7 +221,7 @@
       ]
     },
     {
-      "name": "ConsoleInterface (a.k.a. IClient)",
+      "name": "IClient",
       "superclasses": "",
       "subclasses": "",
       "type": 3,
@@ -233,7 +233,7 @@
       ]
     },
     {
-      "name": "ServerInterface (a.k.a. IMemory)",
+      "name": "IMemory",
       "superclasses": "",
       "subclasses": "",
       "type": 3,
