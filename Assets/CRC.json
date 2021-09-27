@@ -1,0 +1,55 @@
+[
+    {
+      "name": "Company",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de las empresas disponibles ",
+        "Indicar las habilitaciones que necesitará la empresa"
+      ],
+      "collaborators": [
+        "CompanyReport"
+      ]
+    },
+    {
+      "name": "Entrepeneur",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de los emprendedores",
+        "Indicar las habilitaciones que necesitará el emprendedor para acceder a los materiales"
+      ],
+      "collaborators": [
+        "EntrepeneurReport"
+      ]
+    },
+    {
+      "name": "Habilitation",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de las habilitaciones (tipo y nivel)",
+        "Indicar si se cumplen los requisitos"
+      ],
+      "collaborators": [
+        "Requirement"
+      ]
+    },
+    {
+      "name": "Requirement",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de los requisitos (tipo y nivel)",
+        "Indicar cuándo se cumplen los requisitos",
+        ""
+      ],
+      "collaborators": [
+        ""
+      ]
+    }
+  ]
