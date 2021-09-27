@@ -1,5 +1,183 @@
 [
     {
+      "name": "MaterialReport",
+      "superclasses": "",
+      "subclasses": "SentMaterialReport, ReceivedMaterialReport",
+      "type": 1,
+      "responsibilities": [
+        "Create a report using the material amount and date."
+      ],
+      "collaborators": [
+        ""
+      ]
+    },
+    {
+      "name": "SentMaterialReport",
+      "superclasses": "MaterialReport",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Send a report, it needs a location"
+      ],
+      "collaborators": [
+        "MaterialReport"
+      ]
+    },
+    {
+      "name": "ReceivedMaterialReport",
+      "superclasses": "MaterialReport",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Receives a report, also shows the origin."
+      ],
+      "collaborators": [
+        "MaterialReport"
+      ]
+    },
+    {
+      "name": "EntrepeneurReport",
+      "superclasses": "ReceivedMaterialReport",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "It create a list that contains a entrepeneur's reports."
+      ],
+      "collaborators": [
+        "ReceivedMaterialReport"
+      ]
+    },
+    {
+      "name": "EnterpriseReport",
+      "superclasses": "SentMaterialReport",
+      "subclasses": "",
+      "type": 3,
+      "responsibilities": [
+        "It create a list that contains a enterprise's reports."
+      ],
+      "collaborators": [
+        "SentMaterialReport"
+      ]
+    },
+    {
+      "name": "Company",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de las empresas disponibles ",
+        "Indicar las habilitaciones que necesitará la empresa"
+      ],
+      "collaborators": [
+        "CompanyReport"
+      ]
+    },
+    {
+      "name": "Entrepeneur",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de los emprendedores",
+        "Indicar las habilitaciones que necesitará el emprendedor para acceder a los materiales"
+      ],
+      "collaborators": [
+        "EntrepeneurReport"
+      ]
+    },
+    {
+      "name": "Habilitation",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de las habilitaciones (tipo y nivel)",
+        "Indicar si se cumplen los requisitos"
+      ],
+      "collaborators": [
+        "Requirement"
+      ]
+    },
+    {
+      "name": "Requirement",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guardar la información de los requisitos (tipo y nivel)",
+        "Indicar cuándo se cumplen los requisitos",
+      ],
+      "collaborators": [
+        ""
+      ]
+    },
+    {
+      "name": "Material",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guarda el nombre del material.",
+        "Contiene las unidades del material.",
+        "Contiene una serie de requisitos para su operación.",
+        "",
+        ""
+      ],
+      "collaborators": [
+        ""
+      ]
+    },
+    {
+      "name": "MaterialAmount",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Calcula el monto total de un material basándose en el material, la cantidad y la o las unidades"
+      ],
+      "collaborators": [
+        "Material"
+      ]
+    },
+    {
+      "name": "LocatedMaterial",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Conoce la ubicación y cantidad del material."
+      ],
+      "collaborators": [
+        "MaterialAmount",
+        "Location"
+      ]
+    },
+    {
+      "name": "Location",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Guarda la ubicación de un material y calcula la distancia entre el material y el receptor del mismo"
+      ],
+      "collaborators": [
+        "Material",
+        "Entrepeneur"
+      ]
+    },
+    {
+      "name": "Price",
+      "superclasses": "",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Calcula el precio de un material basándose en la o las unidades, la cantidad y la moneda"
+      ],
+      "collaborators": [
+        "Material"
+      ]
+    },
+    {
       "name": "User",
       "superclasses": "",
       "subclasses": "",
@@ -66,4 +244,4 @@
         ""
       ]
     }
-  ]
+]
