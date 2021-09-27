@@ -1,5 +1,65 @@
 [
     {
+      "name": "MaterialReport",
+      "superclasses": "",
+      "subclasses": "SentMaterialReport, ReceivedMaterialReport",
+      "type": 1,
+      "responsibilities": [
+        "Create a report using the material amount and date."
+      ],
+      "collaborators": [
+        ""
+      ]
+    },
+    {
+      "name": "SentMaterialReport",
+      "superclasses": "MaterialReport",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Send a report, it needs a location"
+      ],
+      "collaborators": [
+        "MaterialReport"
+      ]
+    },
+    {
+      "name": "ReceivedMaterialReport",
+      "superclasses": "MaterialReport",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "Receives a report, also shows the origin."
+      ],
+      "collaborators": [
+        "MaterialReport"
+      ]
+    },
+    {
+      "name": "EntrepeneurReport",
+      "superclasses": "ReceivedMaterialReport",
+      "subclasses": "",
+      "type": 1,
+      "responsibilities": [
+        "It create a list that contains a entrepeneur's reports."
+      ],
+      "collaborators": [
+        "ReceivedMaterialReport"
+      ]
+    },
+    {
+      "name": "EnterpriseReport",
+      "superclasses": "SentMaterialReport",
+      "subclasses": "",
+      "type": 3,
+      "responsibilities": [
+        "It create a list that contains a enterprise's reports."
+      ],
+      "collaborators": [
+        "SentMaterialReport"
+      ]
+    },
+    {
       "name": "Company",
       "superclasses": "",
       "subclasses": "",
@@ -46,10 +106,9 @@
       "responsibilities": [
         "Guardar la información de los requisitos (tipo y nivel)",
         "Indicar cuándo se cumplen los requisitos",
-        ""
       ],
       "collaborators": [
         ""
       ]
     }
-  ]
+]
