@@ -17,10 +17,11 @@
       "subclasses": "",
       "type": 1,
       "responsibilities": [
-        "Send a report, it needs a location"
+        "Send a report"
       ],
       "collaborators": [
-        "MaterialReport"
+        "MaterialReport",
+        "Location"
       ]
     },
     {
