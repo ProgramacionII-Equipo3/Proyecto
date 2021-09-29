@@ -13,7 +13,7 @@
 
 // Information holder
 // Service provider
-User
+User //4 (Santiago)
 	Type   // Either administer, enterprise, or entrepeneur
 	Name
 	Password
@@ -21,34 +21,34 @@ User
 
 // Information holder
 // Structurer
-MaterialAmount
+MaterialAmount //1 (Martín)
 	Material
 	Amount
 	Unit
 
 // Information holder
-LocatedMaterial
+LocatedMaterial //1 (Martín)
 	MaterialAmount
 	Location
 
 // Information holder
 // Service provider
-Location
+Location //1 (Martín)
 	Street
 	City
 	Department
 	static Distance()
 
 // Information holder
-Price
+Price //1 (Martín)
 	Number
 	Currency   // Moneda
 	Unit
 
 // Information holder
-Invitation
+Invitation //4 (Santiago)
 	Admin
-	Entrepeneur
+	Company
 	Offer
 	IsPending
 	static Invitation[]
@@ -58,7 +58,7 @@ Invitation
 
 // Information holder
 // Structurer
-Offer
+Offer //4 (Santiago)
 	MaterialAmount
 	Price
 	Location
@@ -67,7 +67,7 @@ Offer
 
 
 // Information holder
-Entrepeneur
+Entrepeneur //2 (Bianca)
 	Name
 	Habilitation[]
 	static Entrepeneur[]
@@ -77,7 +77,7 @@ Entrepeneur
 
 // Information holder
 // Service provider
-Enterprise
+Enterprise //2 (Bianca)
 	Name
 	static Enterprise[]
 	CreateReport() -> EnterpriseReport
@@ -86,33 +86,33 @@ Enterprise
 
 
 // Information holder
-EnterpriseReport
+EnterpriseReport //3 (Juan)
 	SentMaterialReport[]
 
 
 
 // Information holder
-SentMaterialReport
+SentMaterialReport //3 (Juan)
 	MaterialReport
 	Destination
 
 
 
 // Information holder
-EntrepeneurReport
+EntrepeneurReport //3 (Juan)
 	ReceivedMaterialReport[]
 
 
 
 // Information holder
-ReceivedMaterialReport
+ReceivedMaterialReport //3 (Juan)
 	MaterialReport
 	Origin
 
 
 
 // Information holder
-MaterialReport
+MaterialReport //3 (Juan)
 	MaterialAmount
 	Date
 
@@ -120,7 +120,7 @@ MaterialReport
 
 // Information holder
 // Structurer
-Material
+Material //1 (Martín)
 	Name
 	Unit[]
 	Requirement[]
@@ -130,7 +130,7 @@ Material
 
 // Information holder
 // Controller
-Requirement
+Requirement //2 (Bianca)
 	Type
 	Level
 	IsSatisfied(habilitation[]) -> bool
@@ -140,15 +140,15 @@ Requirement
 
 // Information holder
 // Service provider
-Habilitation
+Habilitation //2 (Bianca)
 	Type
 	Level
 	Satisfies(Requirement) -> bool
 
 // Interfacer
 // Coordinator
-ConsoleInterface
+ConsoleInterface //4 (Santiago)
 
 // Interfacer
 // Controller
-ServerInterface
+ServerInterface //4 (Santiago)

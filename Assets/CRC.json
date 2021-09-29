@@ -1,0 +1,286 @@
+[
+  {
+    "name": "MaterialReport",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data that always goes in a material report (the material itself and pickup location)"
+    ],
+    "collaborators": [
+      "Location",
+      "MaterialAmount"
+    ]
+  },
+  {
+    "name": "SentMaterialReport",
+    "superclasses": "MaterialReport",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data about a company's material sending, as well as the entrepeneur who received it"
+    ],
+    "collaborators": [
+      "Entrepeneur",
+      "Location"
+    ]
+  },
+  {
+    "name": "ReceivedMaterialReport",
+    "superclasses": "MaterialReport",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data about an entrepeneur's material reception, as well as the company who sent it"
+    ],
+    "collaborators": [
+      "Company",
+      "Location"
+    ]
+  },
+  {
+    "name": "EntrepeneurReport",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store a list of materials received by an entrepeneur"
+    ],
+    "collaborators": [
+      "ReceivedMaterialReport"
+    ]
+  },
+  {
+    "name": "CompanyReport",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store the list of materials sent by a company"
+    ],
+    "collaborators": [
+      "SentMaterialReport"
+    ]
+  },
+  {
+    "name": "Admin",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store "
+    ]
+  },
+  {
+    "name": "Company",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data about a company (name, location...)",
+      "Create a report of all materials the company sent over a period of time",
+      "Accept or reject an invitation"
+    ],
+    "collaborators": [
+      "Location",
+      "CompanyReport",
+      "Invitation"
+    ]
+  },
+  {
+    "name": "Entrepeneur",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data about an entrepeneur (name, location, title, habilitations, and specializations)",
+      "Create a report of all materials the entrepeneur received over a period of time"
+    ],
+    "collaborators": [
+      "Location",
+      "Habilitation",
+      "EntrepeneurReport"
+    ]
+  },
+  {
+    "name": "Habilitation",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store information about an habilitation (type and level)",
+      "Check if the habilitation satisfies a concrete requirement"
+    ],
+    "collaborators": [
+      "Requirement"
+    ]
+  },
+  {
+    "name": "Requirement",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store information about a requirement (type and level)",
+      "Check if a concrete set of habilitations satisfy a concrete set of requirements"
+    ],
+    "collaborators": [
+      "Habilitation"
+    ]
+  },
+  {
+    "name": "Material",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data about the material (name, appropiate measures, and requirements)"
+    ],
+    "collaborators": [
+      "Measure",
+      "Requirement"
+    ]
+  },
+  {
+    "name": "MaterialAmount",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store data about a certain amount of a certain material",
+      "Create objects of itself, checking the given unit is valid for the given material"
+    ],
+    "collaborators": [
+      "Material",
+      "Unit"
+    ]
+  },
+  {
+    "name": "Measure",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represent a concrete type of measure (weight, length...) through which a certain quantity of material can be determined"
+    ]
+  },
+  {
+    "name": "Unit",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represent a concrete unit of a measure",
+      "Convert from one unit to another of the same measure"
+    ],
+    "collaborators": [
+      "Measure"
+    ]
+  },
+  {
+    "name": "Currency",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represent a concrete currency",
+      "Convert from one currency into another"
+    ],
+    "collaborators": [
+
+    ]
+  },
+  {
+    "name": "Location",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Guarda la ubicación de un material y calcula la distancia entre el material y el receptor del mismo"
+    ],
+    "collaborators": [
+      "Material",
+      "Entrepeneur"
+    ]
+  },
+  {
+    "name": "Price",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store the price of a material, in a concrete currency ($, U$S) per a concrete quantity unit (kg, g, L, mL)"
+    ],
+    "collaborators": [
+      "Material",
+      "Currency",
+      "Unit"
+    ]
+  },
+  {
+    "name": "User",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store information about a program user (type and name)"
+    ],
+    "collaborators": [
+      "UserType"
+    ]
+  },
+  {
+    "name": "Invitation",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Store information about an invitation (the admin who sent the invitation, the company who receives it, the offer it's suggested to make)",
+      "Store its current state (pending, accepted, or rejected)",
+      "Change its state when the company validates or rejects the invitation"
+    ],
+    "collaborators": [
+      "User",
+      "Offer",
+      "InvitationState"
+    ]
+  },
+  {
+    "name": "Offer",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Stores information about an offer of materials (the material and amount, the price, and the location of the materials)"
+    ],
+    "collaborators": [
+      "MaterialAmount",
+      "Price",
+      "Location"
+    ]
+  },
+  {
+    "name": "Client",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Communicate with the user via the I/O system"
+    ],
+    "collaborators": [
+      ""
+    ]
+  },
+  {
+    "name": "Memory",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Communicate with the permanent memory of the program (which can be, among other things, a file or a database)"
+    ],
+    "collaborators": [
+      ""
+    ]
+  }
+]
